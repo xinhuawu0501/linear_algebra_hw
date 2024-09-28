@@ -56,8 +56,7 @@ def det(a):
 
 def invert(a):
     d = det(a)
-    print(d)
-    if(d == 0): return
+    if(not d): return
 
     result = create_matrix(len(a), len(a[0]))
     result[0][0] = a[1][1] / d
@@ -68,12 +67,23 @@ def invert(a):
     return result       
 
 def is_diagonal(a):
-    
-    return
+    for i in range(0, len(a)):
+        for j in range(0, len(a[0])):
+            if i == j and not a[i][j]: return False
+            if i != j and a[i][j]: return False
+    return True
+
+print(is_diagonal(b))
 
 def is_symmetric(a):
-    return
+    if len(a) != len(a[0]): return False
+
+    for i in range(len(a)): ## TODO: check logic
+        for j in range(i, len(a[0])):
+            if i == j: continue
+            if a[i][j] != a[j][i]: return False
+
+    return True
 
 
 
-print(invert(a))
