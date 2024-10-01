@@ -10,8 +10,14 @@ i = [[1, 0, 0], [0, 1, 0], [0, 0, 1]]
 def create_matrix(row, col):
     return [[0 for _ in range(col)] for _ in range(row)]
 
+def is_same_size(a, b):
+    return len(a) == len(b) and len(a[0]) == len(b[0])
+
 def add(a, b):
-    result = create_matrix(len(a), len(b))
+    if not is_same_size(a, b):
+        return
+    
+    result = create_matrix(len(a), len(a[0]))
     for i in range(0, len(a)):
         for j in range(0, len(a[0])):
             result[i][j] = a[i][j] + b[i][j]
@@ -22,6 +28,8 @@ def scale(a, scaler):
     for i in range(0, len(a)):
         for j in range(0, len(a[0])):
             result[i][j] = a[i][j] * scaler
+    return result
+
 
 def mul(a, b):
     a_row = len(a)
@@ -39,6 +47,7 @@ def mul(a, b):
             for k in range(0, b_row):
                 sum += a[i][k] + b[k][j]
             result[i][j] = sum ##TODO: verify logic
+    return result
 
 def transpose(a):
     m = len(a)
@@ -66,6 +75,35 @@ def invert(a):
 
     return result       
 
+
+### a
+##a(1) A+3B
+print("A+3B:\n", add(a, scale(b, 3)))
+
+##a(2) C-B*ET
+print("C-B*ET:\n", add(c, scale(mul(b, transpose(e)), -1)))
+
+##a(3) AT
+print("AT:\n" ,transpose(a))
+
+###b
+##b(1) M=A*B, N=B*A, Is M equal to N?
+m = mul(a, b)
+n = mul(b, a)
+print("Is M equal to N?\n", m == n)
+
+###c. Calculate P = CT*BT and Q = (B*C)T. Is P equal to Q?
+p = mul(transpose(c), transpose(b))
+q = transpose(mul(b, c))
+print("Is P equal to Q?\n", p == q)
+
+###d. Calculate the inverses of A and F, if the corresponding matrix is invertible.
+a_inverse = invert(a)
+f_inverse = invert(f) ##TODO: is f invertible???
+print("Inverse of a:\n", a_inverse)
+print("Inverse of f:\n", f_inverse)
+
+###e. Write a program to determines if matrix is a diagonal matrix. Use it to test the matrices A, B, F, I.
 def is_diagonal(a):
     for i in range(0, len(a)):
         for j in range(0, len(a[0])):
@@ -73,8 +111,14 @@ def is_diagonal(a):
             if i != j and a[i][j]: return False
     return True
 
-print(is_diagonal(b))
+print("A is diagonal?\n", is_diagonal(a))
+print("B is diagonal?\n", is_diagonal(b))
+print("F is diagonal?\n", is_diagonal(f))
+print("I is diagonal?\n", is_diagonal(i))
 
+
+###f. Write a program to determines if matrix is a symmetric matrix. Use it to test
+# the matrices A, B, F, I.
 def is_symmetric(a):
     if len(a) != len(a[0]): return False
 
@@ -85,5 +129,7 @@ def is_symmetric(a):
 
     return True
 
-
-
+print("A is symmetric?\n", is_symmetric(a))
+print("B is symmetric?\n", is_symmetric(b))
+print("F is symmetric?\n", is_symmetric(f))
+print("I is symmetric?\n", is_symmetric(i))
